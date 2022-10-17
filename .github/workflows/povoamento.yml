@@ -24,7 +24,7 @@ jobs:
 
       - name: Instala pacotes
         run: |   
-          install.packages(c("rmarkdown","purrr","dplyr","glue","forcats","grid","ggplot2","tidyr","ggbump","ggiraph","stringr","ggpath","ragg","scales"))
+          install.packages(c("rmarkdown","purrr","dplyr","glue","forcats","grid","ggplot2","tidyr","ggbump","ggiraph","stringr","ggpath","ragg","scales","import"))
         shell: Rscript {0}
        
       - name: Roda o script de gatilho do gerador
