@@ -1,0 +1,189 @@
+---
+  format: html
+---
+
+<!-- Conecta ao código do jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Conecta ao código do selectize -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.14.0/js/selectize.min.js" integrity="sha512-VReIIr1tJEzBye8Elk8Dw/B2dAUZFRfxnV2wbpJ0qOvk57xupH+bZRVHVngdV04WVrjaMeR1HfYlMLCiFENoKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Conecta ao estilo do selectize -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.14.0/css/selectize.default.css" integrity="sha512-dk4mPvoLCkG2kNrEv9UMWs68wZm19gyGeL3aSxMMqFLyqd71M7ikh1pvWFk5VcAX4pfYbkEOSQTmCqCagDWu0Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Insere título da página, menu-buscador e iframe com resultados -->
+<div id='topo'>
+<div id='trofeu'>🏆</div><div id='title'>GP presidencial do Brasil</div>
+</div>
+<select id="select-from-list"></select>
+
+<div id="placeholder">
+<iframe src="" id="trajetoria" width="100%" height="1800px"></iframe>
+</div>
+
+```{r setup, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
+
+## Carrega bibliotecas
+library(glue)
+library(dplyr)
+library(stringr)
+
+## Define parâmetros dos chunks
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE,
+                      error = FALSE, message = FALSE)
+
+```
+
+```{css}
+
+@font-face {
+font-family: Daggersquare;
+src: local("Daggersquare.otf") format("opentype");
+}
+
+body {
+font-family: 'Daggersquare', Sans-Serif;
+background-color: #171717;
+}
+
+main {
+margin: 0;
+}
+
+#topo {
+display: flex;
+}
+
+#trofeu {
+width: 25%;
+font-size: 160px;
+margin: auto;
+}
+
+#title {
+font-size: 70px;
+line-height: 75px;
+color: white;
+width: 70%;
+margin: auto;
+}
+
+.selectize-input,
+.selectize-control.single .selectize-input.input-active,
+.selectize-control.single .selectize-input,
+.selectize-dropdown {
+background: #000000;
+font-size: 30px;
+line-height: 33px;
+}
+
+.selectize-dropdown,.selectize-input,.selectize-input input {
+color: white;
+font-size: 30px;
+line-height: 33px;
+}
+
+.selectize-dropdown .optgroup-header {
+background: #21171f;
+color: white;
+font-size: 40px;
+line-height: 43px;
+padding-top: 25px !important;
+}
+
+.selectize-dropdown .active {
+background-color: white;
+color: black;
+font-size: 30px;
+line-height: 33px;
+}
+
+.selectize-dropdown .option,
+.selectize-dropdown .optgroup-header,
+.selectize-dropdown .no-results,
+.selectize-dropdown .create,
+.selectize-input {
+padding: 15px 8px;
+}
+
+.selectize-dropdown .single {
+top: 67px;
+}
+
+```
+
+```{r results='asis'}
+
+## Carrega os nomes e códigos IBGE dos municípios
+ibge <- readRDS("data/ibge.RDS")
+
+
+
+## Carrega dados de população estimada
+pop <- readRDS("data/pop.RDS")
+
+## Obtém as top3 cidades por população em cada estado
+pop <- pop %>% 
+  dplyr::group_by(sigla_uf) %>% 
+  dplyr::slice_max(order_by = populacao, n = 3) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(ibge7 = id_municipio, sigla_uf, populacao)
+
+## Mantém apenas as cidades filtradas
+ibge <- ibge %>% 
+  dplyr::filter(ibge7 %in% pop$ibge7)
+
+
+
+
+## Troca o símbolo do apóstrofo
+ibge <- ibge %>% 
+  dplyr::mutate(nome = str_replace_all(nome, "'", "`"))
+
+## Gera a lista de opções do menu
+select_options <- ibge %>% 
+  dplyr::mutate(
+    string = glue("{series: '[nome_uf]', value: '[ibge7]', name: '[nome]'},",
+                  .open = "[", .close = "]")
+  ) %>% 
+  dplyr::pull(string) %>% 
+  glue_collapse(sep = "")
+
+## Gera a lista de categorias do menu
+select_optgroups <- ibge %>% 
+  dplyr::distinct(nome_uf) %>% 
+  dplyr::mutate(
+    string = glue("{value: '[nome_uf]', label: '[nome_uf]'},",
+                  .open = "[", .close = "]")
+  ) %>% 
+  dplyr::pull(string) %>% 
+  glue_collapse(sep = "")
+
+```
+
+<script>
+
+$(function () {
+$('#select-from-list').selectize({
+options: [
+`r select_options`
+],
+optgroups: [
+`r select_optgroups`
+],
+optgroupField: 'series',
+labelField: 'name',
+searchField: ['name'],
+placeholder: 'Selecione uma cidade',
+delimiter: ',',
+onChange: function(value) {
+var str1 = 'cidades_docs/';
+var str2 = value;
+var str3 = '.html';
+var res = `${str1}${str2}${str3}`;
+document.querySelector('#trajetoria').getAttributeNode('src').value = res;
+}
+});
+});
+
+</script>

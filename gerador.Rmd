@@ -1,0 +1,314 @@
+---
+output: html_document
+params:
+  cidade: "2927408"
+---
+
+```{r setup, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
+
+## Carrega bibliotecas
+library(purrr)
+library(dplyr)
+library(forcats)
+library(ggplot2)
+library(tidyr)
+library(ggbump)
+library(ggiraph)
+library(stringr)
+library(glue)
+library(ggfx)
+library(ggpath)
+library(ragg)
+library(scales)
+
+## Define parâmetros dos chunks
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE,
+                      error = FALSE, message = FALSE)
+
+## Define fontes dos gráficos
+fonte <- "Daggersquare"
+
+```
+
+```{css}
+
+@font-face {
+font-family: Daggersquare;
+src: local("Daggersquare.otf") format("opentype");
+}
+
+body {
+font-family: 'Daggersquare', Sans-Serif;
+background-color: #171717;
+}
+
+.tips {
+height: 175px;
+padding: 20px;
+border-radius: 7px;
+text-align: left;
+line-height: 0.9;
+}
+
+```
+
+```{r}
+
+## Carrega os parâmetros de geração dos documentos
+codigo <- params$cidade
+
+## Obtém os anos de eleição a analisar
+anos <- sort(unique(df$ano))
+
+## Seleciona os dados de uma dada cidade e turno
+selecionado <- df %>% 
+  dplyr::filter(ibge7 == codigo, turno == 1)
+
+## Condensa o nome das candidaturas agrupadas em "Outros"
+selecionado <- selecionado %>% 
+  dplyr::mutate(cand = ifelse(numero_cand == "Outros", "DIVERSOS", cand))
+
+## Soma os votos do agregado de partidos ("Outros") e calcula percentagens
+selecionado <- selecionado %>% 
+  dplyr::group_by(ano, numero_cand, cand) %>% 
+  dplyr::summarise(votos = sum(votos)) %>% 
+  dplyr::group_by(ano) %>% 
+  dplyr::mutate(validos = sum(votos),
+                pct = round(100*votos/validos,2)) %>% 
+  dplyr::ungroup()
+
+## Gera e salva gráficos de barras com
+## o desempenho de cada partido ao longo dos anos
+barras <- selecionado %>%
+  dplyr::left_join(cores_part) %>% 
+  dplyr::group_by(numero_cand) %>% 
+  tidyr::nest()
+
+barras$data %>% 
+  purrr::walk(function (dados) {
+    
+    partido = unique(dados$partido)
+    
+    p = dados %>% 
+      dplyr::mutate(ano = factor(ano, levels = rev(anos)),
+                    label = glue("<span style='font-size:21px;'>{pct}%</span><br>
+                                 <span style='font-size:8px;'>{cand}</span>")) %>% 
+      ggplot(aes(y = ano)) +
+      geom_col(aes(x = validos), fill = "#e0e0e0", orientation = "y", width = 0.8) +
+      geom_col(aes(x = votos, fill = I(cor)), orientation = "y", width = 0.8) +
+      ggtext::geom_richtext(aes(x = 1.05*votos, label = label), hjust = 0,
+                            fill = NA, label.colour = NA, size = 1,
+                            family = fonte, nudge_y = -0.04) +
+      scale_y_discrete(drop = FALSE) +
+      scale_x_continuous(expand = expansion(mult = c(0.03, 0.3))) +
+      theme_void() +
+      theme(
+        plot.margin = margin(10, 10, 10, 10),
+        axis.text.y = element_text(family = fonte, hjust = 1)
+      )
+    
+    ggsave(filename = glue("cidades_docs/barras/{codigo}_{partido}.png"),
+           plot = p, width = 5, height = 3, bg = "white")
+    
+  })
+
+## Obtém o total de votos dos partidos em todo o período
+total <- selecionado %>% 
+  dplyr::left_join(cores_part) %>% 
+  dplyr::group_by(partido) %>% 
+  dplyr::summarise(votos = sum(votos, na.rm = TRUE)) %>% 
+  dplyr::arrange(desc(votos)) %>% 
+  dplyr::mutate(
+    votos = label_number(scale_cut = cut_short_scale())(votos),
+    label = glue("{partido}: {votos}"),
+    path = glue("www/carros/car_{partido}.png"),
+    tooltip = glue("<img style='border-radius:7px;' src='barras/{codigo}_{partido}.png' width='500px'>")
+  )
+
+## Define as coordenadas dos totais
+total_x <- c(rep(8,3),rep(9,3),rep(10,3),rep(11,2))
+total_y <- c(rep(c(1.5,3,4.5),3),1.5,3)
+total <- total %>% 
+  dplyr::mutate(x = 0.2+total_x[1:n()],
+                y = total_y[1:n()])
+
+## Cria uma variável com o ranking dos partidos em cada eleição.
+## Mantém apenas o top5 de cada ano
+selecionado <- selecionado %>% 
+  dplyr::group_by(ano) %>% 
+  dplyr::arrange(ano, desc(votos)) %>% 
+  dplyr::mutate(rank = 1:n()) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::filter(rank <= 5)
+
+## Elimina níveis não presentes em "numero_cand".
+## Garante que há observações em todos os anos para
+## representar eleições onde partidos ficaram fora do top5 (rank = 6)
+selecionado <- selecionado %>% 
+  dplyr::mutate(numero_cand = fct_drop(numero_cand)) %>% 
+  tidyr::complete(ano, numero_cand, fill = list(rank = 6))
+
+## Adiciona as cores e nomes dos partidos
+selecionado <- selecionado %>% 
+  dplyr::left_join(cores_part)
+
+## Mantém apenas os pontos entre a primeira e a última
+## aparição de cada partido no top5
+selecionado <- selecionado %>% 
+  dplyr::group_by(numero_cand) %>% 
+  dplyr::mutate(
+    primeira = min(which(rank != 6)),
+    ultima = max(which(rank != 6))
+  ) %>% 
+  dplyr::filter(row_number() >= primeira,
+                row_number() <= ultima) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(-primeira, -ultima)
+
+## Cria diferentes grupos para que seções "ativas" separadas por "inativas"
+## não vão ser conectadas pelo ggbump
+selecionado <- selecionado %>% 
+  dplyr::arrange(partido, ano) %>% 
+  dplyr::group_by(partido) %>% 
+  dplyr::mutate(lag_zero = if_else(lag(rank) %in% c(6, NA) & rank <= 5, 1, 0, 0)) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(grupo_ativo = cumsum(lag_zero))
+
+## Cria uma variável numérica para representar a ordem das eleições e outra
+## para representar os partidos
+selecionado <- selecionado %>% 
+  mutate(order = factor(ano, levels = sort(unique(ano))),
+         order = as.numeric(order),
+         grupo_partido = factor(partido),
+         grupo_partido = as.numeric(grupo_partido))
+
+## Usa o ggbump para calcular as coordenadas dos desempenhos dos partidos
+quebramola <- selecionado %>% 
+  ggplot(aes(order, rank, color = I(cor))) +
+  ggbump::geom_bump(aes(group = grupo_partido), smooth = 15, size = 5,
+                    alpha = 0.2) +
+  ggbump::geom_bump(aes(group = grupo_ativo), smooth = 15, size = 5,
+                    data = selecionado %>% filter(rank <= 5))
+geral <- ggplot2::layer_data(quebramola, 1)
+ativo <- ggplot2::layer_data(quebramola, 2)
+
+## Recupera a info do partido nos bancos do ggbump
+geral <- selecionado %>% 
+  dplyr::distinct(partido, grupo_partido) %>% 
+  dplyr::right_join(geral, by = c("grupo_partido" = "group"))
+ativo <- selecionado %>% 
+  dplyr::distinct(partido, grupo_ativo) %>% 
+  dplyr::right_join(ativo, by = c("grupo_ativo" = "group"))
+
+## Define as tooltips
+selecionado <- selecionado %>% 
+  dplyr::mutate(
+    votos = label_number(scale_cut = cut_short_scale())(votos),
+    tooltip =
+      glue("<div class='tips' style='background-color:{cor};color:{texto};'>
+           <img style='float:left;border-radius:5px;border:{texto} 4px solid;' src='candidaturas/{ano}_{partido}.png' width='100px'>
+           <div style='float:left;margin-left:20px;width:240px;'>
+           <div style='font-size:30px;'>{cand}</div>
+           <div style='font-size:15px;margin-top:4px;'>CANDIDATURA</div>
+           <div style='font-size:25px;margin-top:15px;'>{votos} ({pct}%)</div>
+           <div style='font-size:15px;margin-top:4px;'>VOTOS E PORCENTAGEM</div>
+           </div></div>")
+  )
+
+## Obtém o nome da cidade selecionada e gera o título do gráfico
+nome_cidade <- ibge %>%
+  dplyr::filter(ibge7 == codigo) %>% 
+  dplyr::pull(nome)
+nome_uf <- pop %>%
+  dplyr::filter(ibge7 == codigo) %>% 
+  dplyr::pull(sigla_uf)
+nome <- glue("{nome_cidade} ({nome_uf})") %>%
+  str_wrap(width = 15) %>% 
+  str_replace_all("\n", "<br>")
+titulo <- "Desempenho dos partidos no 1o turno<br>nas corridas presidenciais em"
+
+## Gera versão estática do gráfico
+estatica <- ggplot(NULL) +
+  
+  ### Insere o título e nome da cidade
+  ggtext::geom_richtext(aes(x = -1.78, y = 0.7, label = titulo),
+                        fill = NA, label.colour = NA, 
+                        hjust = 0, size = 9, lineheight = 1.1,
+                        color = "white", family = fonte) +
+  ggtext::geom_richtext(aes(x = -0.72, y = 0.7, label = nome),
+                        fill = NA, label.colour = NA, 
+                        hjust = 0, size = 20, lineheight = 0.95,
+                        color = "white", family = fonte) +
+  
+  ### Insere as posições do ranking
+  geom_text(aes(y = 1:5, x = 0.2, label = glue("{1:5}o")),
+            size = 10, color = "white", family = fonte) +
+  
+  ### Insere a zebra com o texto indicando o ano de eleição
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = 0.5, fill = "red", color = NA) +
+  geom_rect(aes(ymin = -0.3, ymax = 0.3, xmin = (-2:11)-0.05, xmax = (-2:11)+0.45), fill = "white") +
+  geom_text(aes(y = 0, x = (1:6)+0.2, label = anos), size = 7, family = fonte) +
+  
+  ### Insere a região do pit stop
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = 5.5, ymax = 6.5, fill = "black", color = NA) +
+  annotate("text", x = -2, y = 6, label = "PIT STOP LANE", hjust = 0,
+           size = 7, color = "yellow", family = fonte, angle = -90) +
+  annotate("text", x = 0.2, y = 6, label = "Fora do\nTop 5",
+           size = 6, color = "yellow", family = fonte) +
+  
+  ### Insere a trajetória dos partidos (geral, ativo e segmento)
+  geom_path_interactive(aes(x = x, y = y, group = grupo_partido,
+                            colour = I(colour), data_id = partido),
+                        alpha = 0.2, size = 3, data = geral) +
+  geom_path_interactive(aes(x = x, y = y, group = grupo_ativo,
+                            colour = I(colour), data_id = partido),
+                        size = 3, data = ativo) +
+  geom_segment_interactive(aes(x = order-0.2, xend = order+0.2, data_id = partido,
+                               y = rank, yend = rank, colour = I(cor)),
+                           lineend = "round", size = 3,
+                           data = selecionado %>% filter(rank <= 5)) +
+  
+  ### Insere os carros e o ponto com as tooltips
+  geom_point(aes(x = order+0.2, y = rank), size = 22, color = "#171717",
+             data = selecionado %>% filter(rank <= 5)) +
+  geom_from_path_interactive(aes(x = order+0.2, y = rank,
+                                 data_id = partido, tooltip = tooltip,
+                                 path = glue("www/carros/car_{partido}.png")),
+                             width = 0.05, height = 0.05, angle = -90,
+                             data = selecionado %>% filter(rank <= 5)) +
+  
+  ### Insere texto e carros no ranking dos totais
+  ggtext::geom_richtext(aes(x = 7.2, y = 0.7, label = "Total de votos<br>ao longo dos anos"),
+                        fill = NA, label.colour = NA, 
+                        hjust = 0, size = 11, lineheight = 1.1,
+                        color = "white", family = fonte) +
+  geom_from_path_interactive(aes(x = x, y = y, path = path,
+                                 data_id = partido, tooltip = tooltip),
+                             width = 0.13, height = 0.13, data = total) +
+  geom_text(aes(x = x, y = y, label = label), nudge_x = -0.45, size = 5,
+            color = "white", family = fonte, data = total) +
+  
+  ### Reverte os eixos, elimina espaço extra no eixo-x e inverte a ordem do eixo-y
+  coord_flip() +
+  scale_y_continuous(expand = expansion(mult = 0)) +
+  scale_x_reverse(expand = expansion(mult = 0.03), limits = c(11.7,-2.1)) +
+  
+  ### Elimina e customiza elementos do tema
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "#171717", color = NA),
+    legend.position = 'none'
+  )
+
+## Converte a versão estática em interativa
+girafe(ggobj = estatica, 
+       width_svg = 10,
+       height_svg = 20,
+       options = list(
+         opts_tooltip(css = "font-family:Daggersquare;", opacity = 1),
+         opts_hover_inv(css = "opacity:0.1;"),
+         opts_hover(css = "opacity:1;")
+       ))
+
+```
+

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>index</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<!-- Conecta ao código do jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Conecta ao código do selectize -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.14.0/js/selectize.min.js" integrity="sha512-VReIIr1tJEzBye8Elk8Dw/B2dAUZFRfxnV2wbpJ0qOvk57xupH+bZRVHVngdV04WVrjaMeR1HfYlMLCiFENoKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Conecta ao estilo do selectize -->
+<p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.14.0/css/selectize.default.css" integrity="sha512-dk4mPvoLCkG2kNrEv9UMWs68wZm19gyGeL3aSxMMqFLyqd71M7ikh1pvWFk5VcAX4pfYbkEOSQTmCqCagDWu0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></p>
+<!-- Insere título da página, menu-buscador e iframe com resultados -->
+<div id="topo">
+<div id="trofeu">
+🏆
+</div>
+<div id="title">
+GP presidencial do Brasil
+</div>
+</div>
+<p><select id="select-from-list"></select></p>
+<div id="placeholder">
+<iframe src="" id="trajetoria" width="100%" height="1800px">
+</iframe>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<style type="text/css">
+
+@font-face {
+font-family: Daggersquare;
+src: local("Daggersquare.otf") format("opentype");
+}
+
+body {
+font-family: 'Daggersquare', Sans-Serif;
+background-color: #171717;
+}
+
+main {
+margin: 0;
+}
+
+#topo {
+display: flex;
+}
+
+#trofeu {
+width: 25%;
+font-size: 160px;
+margin: auto;
+}
+
+#title {
+font-size: 70px;
+line-height: 75px;
+color: white;
+width: 70%;
+margin: auto;
+}
+
+.selectize-input,
+.selectize-control.single .selectize-input.input-active,
+.selectize-control.single .selectize-input,
+.selectize-dropdown {
+background: #000000;
+font-size: 30px;
+line-height: 33px;
+}
+
+.selectize-dropdown,.selectize-input,.selectize-input input {
+color: white;
+font-size: 30px;
+line-height: 33px;
+}
+
+.selectize-dropdown .optgroup-header {
+background: #21171f;
+color: white;
+font-size: 40px;
+line-height: 43px;
+padding-top: 25px !important;
+}
+
+.selectize-dropdown .active {
+background-color: white;
+color: black;
+font-size: 30px;
+line-height: 33px;
+}
+
+.selectize-dropdown .option,
+.selectize-dropdown .optgroup-header,
+.selectize-dropdown .no-results,
+.selectize-dropdown .create,
+.selectize-input {
+padding: 15px 8px;
+}
+
+.selectize-dropdown .single {
+top: 67px;
+}
+
+</style>
+</div>
+<script>
+
+$(function () {
+$('#select-from-list').selectize({
+options: [
+{series: 'Rondônia', value: '1100023', name: 'Ariquemes'},{series: 'Rondônia', value: '1100122', name: 'Ji-Paraná'},{series: 'Rondônia', value: '1100205', name: 'Porto Velho'},{series: 'Acre', value: '1200203', name: 'Cruzeiro do Sul'},{series: 'Acre', value: '1200401', name: 'Rio Branco'},{series: 'Acre', value: '1200500', name: 'Sena Madureira'},{series: 'Amazonas', value: '1301902', name: 'Itacoatiara'},{series: 'Amazonas', value: '1302603', name: 'Manaus'},{series: 'Amazonas', value: '1303403', name: 'Parintins'},{series: 'Roraima', value: '1400100', name: 'Boa Vista'},{series: 'Roraima', value: '1400209', name: 'Caracaraí'},{series: 'Roraima', value: '1400472', name: 'Rorainópolis'},{series: 'Pará', value: '1500800', name: 'Ananindeua'},{series: 'Pará', value: '1501402', name: 'Belém'},{series: 'Pará', value: '1506807', name: 'Santarém'},{series: 'Amapá', value: '1600279', name: 'Laranjal do Jari'},{series: 'Amapá', value: '1600303', name: 'Macapá'},{series: 'Amapá', value: '1600600', name: 'Santana'},{series: 'Tocantins', value: '1702109', name: 'Araguaína'},{series: 'Tocantins', value: '1709500', name: 'Gurupi'},{series: 'Tocantins', value: '1721000', name: 'Palmas'},{series: 'Maranhão', value: '2105302', name: 'Imperatriz'},{series: 'Maranhão', value: '2111201', name: 'São José de Ribamar'},{series: 'Maranhão', value: '2111300', name: 'São Luís'},{series: 'Piauí', value: '2207702', name: 'Parnaíba'},{series: 'Piauí', value: '2208007', name: 'Picos'},{series: 'Piauí', value: '2211001', name: 'Teresina'},{series: 'Ceará', value: '2303709', name: 'Caucaia'},{series: 'Ceará', value: '2304400', name: 'Fortaleza'},{series: 'Ceará', value: '2307304', name: 'Juazeiro do Norte'},{series: 'Rio Grande do Norte', value: '2408003', name: 'Mossoró'},{series: 'Rio Grande do Norte', value: '2408102', name: 'Natal'},{series: 'Rio Grande do Norte', value: '2403251', name: 'Parnamirim'},{series: 'Paraíba', value: '2504009', name: 'Campina Grande'},{series: 'Paraíba', value: '2507507', name: 'João Pessoa'},{series: 'Paraíba', value: '2513703', name: 'Santa Rita'},{series: 'Pernambuco', value: '2607901', name: 'Jaboatão dos Guararapes'},{series: 'Pernambuco', value: '2609600', name: 'Olinda'},{series: 'Pernambuco', value: '2611606', name: 'Recife'},{series: 'Alagoas', value: '2700300', name: 'Arapiraca'},{series: 'Alagoas', value: '2704302', name: 'Maceió'},{series: 'Alagoas', value: '2707701', name: 'Rio Largo'},{series: 'Sergipe', value: '2800308', name: 'Aracaju'},{series: 'Sergipe', value: '2803500', name: 'Lagarto'},{series: 'Sergipe', value: '2804805', name: 'Nossa Senhora do Socorro'},{series: 'Bahia', value: '2910800', name: 'Feira de Santana'},{series: 'Bahia', value: '2927408', name: 'Salvador'},{series: 'Bahia', value: '2933307', name: 'Vitória da Conquista'},{series: 'Minas Gerais', value: '3106200', name: 'Belo Horizonte'},{series: 'Minas Gerais', value: '3118601', name: 'Contagem'},{series: 'Minas Gerais', value: '3170206', name: 'Uberlândia'},{series: 'Espírito Santo', value: '3201308', name: 'Cariacica'},{series: 'Espírito Santo', value: '3205002', name: 'Serra'},{series: 'Espírito Santo', value: '3205200', name: 'Vila Velha'},{series: 'Rio de Janeiro', value: '3301702', name: 'Duque de Caxias'},{series: 'Rio de Janeiro', value: '3304557', name: 'Rio de Janeiro'},{series: 'Rio de Janeiro', value: '3304904', name: 'São Gonçalo'},{series: 'São Paulo', value: '3509502', name: 'Campinas'},{series: 'São Paulo', value: '3518800', name: 'Guarulhos'},{series: 'São Paulo', value: '3550308', name: 'São Paulo'},{series: 'Paraná', value: '4106902', name: 'Curitiba'},{series: 'Paraná', value: '4113700', name: 'Londrina'},{series: 'Paraná', value: '4115200', name: 'Maringá'},{series: 'Santa Catarina', value: '4202404', name: 'Blumenau'},{series: 'Santa Catarina', value: '4205407', name: 'Florianópolis'},{series: 'Santa Catarina', value: '4209102', name: 'Joinville'},{series: 'Rio Grande do Sul', value: '4304606', name: 'Canoas'},{series: 'Rio Grande do Sul', value: '4305108', name: 'Caxias do Sul'},{series: 'Rio Grande do Sul', value: '4314902', name: 'Porto Alegre'},{series: 'Mato Grosso do Sul', value: '5002704', name: 'Campo Grande'},{series: 'Mato Grosso do Sul', value: '5003702', name: 'Dourados'},{series: 'Mato Grosso do Sul', value: '5008305', name: 'Três Lagoas'},{series: 'Mato Grosso', value: '5103403', name: 'Cuiabá'},{series: 'Mato Grosso', value: '5107602', name: 'Rondonópolis'},{series: 'Mato Grosso', value: '5108402', name: 'Várzea Grande'},{series: 'Goiás', value: '5201108', name: 'Anápolis'},{series: 'Goiás', value: '5201405', name: 'Aparecida de Goiânia'},{series: 'Goiás', value: '5208707', name: 'Goiânia'},{series: 'Distrito Federal', value: '5300108', name: 'Brasília'},
+],
+optgroups: [
+{value: 'Rondônia', label: 'Rondônia'},{value: 'Acre', label: 'Acre'},{value: 'Amazonas', label: 'Amazonas'},{value: 'Roraima', label: 'Roraima'},{value: 'Pará', label: 'Pará'},{value: 'Amapá', label: 'Amapá'},{value: 'Tocantins', label: 'Tocantins'},{value: 'Maranhão', label: 'Maranhão'},{value: 'Piauí', label: 'Piauí'},{value: 'Ceará', label: 'Ceará'},{value: 'Rio Grande do Norte', label: 'Rio Grande do Norte'},{value: 'Paraíba', label: 'Paraíba'},{value: 'Pernambuco', label: 'Pernambuco'},{value: 'Alagoas', label: 'Alagoas'},{value: 'Sergipe', label: 'Sergipe'},{value: 'Bahia', label: 'Bahia'},{value: 'Minas Gerais', label: 'Minas Gerais'},{value: 'Espírito Santo', label: 'Espírito Santo'},{value: 'Rio de Janeiro', label: 'Rio de Janeiro'},{value: 'São Paulo', label: 'São Paulo'},{value: 'Paraná', label: 'Paraná'},{value: 'Santa Catarina', label: 'Santa Catarina'},{value: 'Rio Grande do Sul', label: 'Rio Grande do Sul'},{value: 'Mato Grosso do Sul', label: 'Mato Grosso do Sul'},{value: 'Mato Grosso', label: 'Mato Grosso'},{value: 'Goiás', label: 'Goiás'},{value: 'Distrito Federal', label: 'Distrito Federal'},
+],
+optgroupField: 'series',
+labelField: 'name',
+searchField: ['name'],
+placeholder: 'Selecione uma cidade',
+delimiter: ',',
+onChange: function(value) {
+var str1 = 'cidades_docs/';
+var str2 = value;
+var str3 = '.html';
+var res = `${str1}${str2}${str3}`;
+document.querySelector('#trajetoria').getAttributeNode('src').value = res;
+}
+});
+});
+
+</script>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
