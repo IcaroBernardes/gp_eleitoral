@@ -1,3 +1,8 @@
+# Loads libraries
+library(ggpath)
+library(import)
+library(ggplot2)
+
 # Imports grid::is.grob
 import::here(grid, is.grob)
 
