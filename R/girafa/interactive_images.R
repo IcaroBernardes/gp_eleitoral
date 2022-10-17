@@ -11,7 +11,7 @@ source("R/girafa/utils.R")
 geom_from_path_interactive <- function(...)
   {layer_interactive(ggpath::geom_from_path, ...)}
 
-GeomInteractiveFromPath <- ggproto(
+GeomInteractiveFromPath <- ggplot2::ggproto(
   "GeomInteractiveFromPath",
   GeomFromPath,
   default_aes = add_default_interactive_aes(GeomFromPath),
