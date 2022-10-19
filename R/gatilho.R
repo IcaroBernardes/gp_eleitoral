@@ -4,6 +4,16 @@ library(glue)
 library(dplyr)
 library(forcats)
 
+library(purrr)
+library(ggplot2)
+library(tidyr)
+library(ggbump)
+library(ggiraph)
+library(stringr)
+library(ggpath)
+library(ragg)
+library(scales)
+
 ## Carrega a função com a versão interativa de ggpath::geom_from_path
 source("R/girafa/interactive_images.R")
 
