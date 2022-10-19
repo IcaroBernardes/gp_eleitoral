@@ -7,18 +7,19 @@ params:
 ```{r setup, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
 
 ## Carrega bibliotecas
-library(purrr)
 library(dplyr)
 library(forcats)
-library(ggplot2)
-library(tidyr)
 library(ggbump)
 library(ggiraph)
-library(stringr)
-library(glue)
 library(ggpath)
+library(ggplot2)
+library(ggtext)
+library(glue)
+library(purrr)
 library(ragg)
 library(scales)
+library(stringr)
+library(tidyr)
 
 ## Define parâmetros dos chunks
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE,
