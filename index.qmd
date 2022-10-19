@@ -23,12 +23,12 @@
 
 ```{r setup, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
 
-## Carrega bibliotecas
+# Carrega bibliotecas
 library(glue)
 library(dplyr)
 library(stringr)
 
-## Define parâmetros dos chunks
+# Define parâmetros dos chunks
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE,
                       error = FALSE, message = FALSE)
 
@@ -114,33 +114,14 @@ top: 67px;
 
 ```{r results='asis'}
 
-## Carrega os nomes e códigos IBGE dos municípios
+# Carrega os nomes e códigos IBGE dos municípios
 ibge <- readRDS("data/ibge.RDS")
 
-
-
-## Carrega dados de população estimada
-pop <- readRDS("data/pop.RDS")
-
-## Obtém as top3 cidades por população em cada estado
-pop <- pop %>% 
-  dplyr::group_by(sigla_uf) %>% 
-  dplyr::slice_max(order_by = populacao, n = 3) %>% 
-  dplyr::ungroup() %>% 
-  dplyr::select(ibge7 = id_municipio, sigla_uf, populacao)
-
-## Mantém apenas as cidades filtradas
-ibge <- ibge %>% 
-  dplyr::filter(ibge7 %in% pop$ibge7)
-
-
-
-
-## Troca o símbolo do apóstrofo
+# Troca o símbolo do apóstrofo
 ibge <- ibge %>% 
   dplyr::mutate(nome = str_replace_all(nome, "'", "`"))
 
-## Gera a lista de opções do menu
+# Gera a lista de opções do menu
 select_options <- ibge %>% 
   dplyr::mutate(
     string = glue("{series: '[nome_uf]', value: '[ibge7]', name: '[nome]'},",
@@ -149,7 +130,7 @@ select_options <- ibge %>%
   dplyr::pull(string) %>% 
   glue_collapse(sep = "")
 
-## Gera a lista de categorias do menu
+# Gera a lista de categorias do menu
 select_optgroups <- ibge %>% 
   dplyr::distinct(nome_uf) %>% 
   dplyr::mutate(
@@ -161,6 +142,7 @@ select_optgroups <- ibge %>%
 
 ```
 
+<!-- Define a caixa de seleção da cidade com selectize.js -->
 <script>
 
 $(function () {

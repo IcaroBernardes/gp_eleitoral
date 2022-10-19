@@ -2,6 +2,7 @@
 library(dplyr)
 library(forcats)
 library(glue)
+library(quarto)
 library(rmarkdown)
 library(systemfonts)
 
@@ -27,16 +28,13 @@ votacao <- readRDS("data/votacao.RDS")
 candidaturas <- readRDS("data/candidaturas.RDS")
 
 # 1. Une, filtra e condensa os dados
-## Obtém as top3 cidades por população em cada estado
-pop <- pop %>% 
-  dplyr::group_by(sigla_uf) %>% 
-  dplyr::slice_max(order_by = populacao, n = 1) %>% 
-  dplyr::ungroup() %>% 
+## Seleciona e renomeia dados
+pop <- pop %>%
   dplyr::select(ibge7 = id_municipio, sigla_uf, populacao)
 
-## Mantém apenas as cidades filtradas
-df <- votacao %>% 
-  dplyr::mutate(ibge7 = as.character(ibge7)) %>% 
+## Mantém apenas as cidades com os códigos IBGE correntes
+df <- votacao %>%
+  dplyr::mutate(ibge7 = as.character(ibge7)) %>%
   dplyr::inner_join(pop)
 
 ## Insere os nomes dos candidatos no banco de dados
@@ -67,3 +65,6 @@ renderMyDocument <- function(codigo) {
 
 ## Aplica a função para gerar vários html
 lapply(lista_codigos, renderMyDocument)
+
+# 3. Gera a página principal que conduz às outras
+quarto::quarto_render("index.qmd")
