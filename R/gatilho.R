@@ -27,7 +27,7 @@ candidaturas <- readRDS("data/candidaturas.RDS")
 ## Obtém as top3 cidades por população em cada estado
 pop <- pop %>% 
   dplyr::group_by(sigla_uf) %>% 
-  dplyr::slice_max(order_by = populacao, n = 3) %>% 
+  dplyr::slice_max(order_by = populacao, n = 1) %>% 
   dplyr::ungroup() %>% 
   dplyr::select(ibge7 = id_municipio, sigla_uf, populacao)
 
