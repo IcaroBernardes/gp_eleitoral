@@ -1,24 +1,9 @@
 # 0. Carrega bibliotecas e dados
-#library(pacman)
-#pacman::p_load(rmarkdown,glue,dplyr,forcats,purrr,ggplot2,grid,ggtext,
-#              tidyr,ggbump,ggiraph,stringr,ggpath,ragg,scales)
 
-library(rmarkdown)
-library(glue)
 library(dplyr)
 library(forcats)
-
-library(purrr)
-library(ggplot2)
-library(tidyr)
-library(ggbump)
-library(ggiraph)
-library(stringr)
-library(ggpath)
-library(ragg)
-library(scales)
-library(grid)
-library(ggtext)
+library(glue)
+library(rmarkdown)
 
 ## Carrega a função com a versão interativa de ggpath::geom_from_path
 source("R/girafa/interactive_images.R")
@@ -69,6 +54,7 @@ lista_codigos <- unique(df$ibge7)
 
 ## Define função para gera vários html com o gráfico de cada cidade
 renderMyDocument <- function(codigo) {
+    glue("{match(codigo,lista_codigos)} de {length(lista_codigos)}...")
     rmarkdown::render("gerador.Rmd",
                       params = list(cidade = codigo),
 
