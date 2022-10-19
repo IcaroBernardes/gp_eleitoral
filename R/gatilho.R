@@ -1,9 +1,12 @@
 # 0. Carrega bibliotecas e dados
-
 library(dplyr)
 library(forcats)
 library(glue)
 library(rmarkdown)
+library(systemfonts)
+
+## Registra a fonte para que possa ser usada nos gráficos de barras
+systemfonts::register_font("Daggersquare","cidades_docs/DAGGERSQUARE.otf")
 
 ## Carrega a função com a versão interativa de ggpath::geom_from_path
 source("R/girafa/interactive_images.R")
