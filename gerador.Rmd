@@ -106,9 +106,10 @@ barras$data %>%
         plot.margin = margin(10, 10, 10, 10),
         axis.text.y = element_text(family = fonte, hjust = 1)
       )
-    
+       
     ggsave(filename = glue("cidades_docs/barras/{codigo}_{partido}.png"),
-           plot = p, width = 5, height = 3, bg = "white")
+           plot = p, width = 5, height = 3, bg = "white",
+           device = ragg::agg_png, res = 320, dpi = 320)
     
   })
 
