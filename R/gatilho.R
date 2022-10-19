@@ -1,6 +1,6 @@
 # 0. Carrega bibliotecas e dados
 #library(pacman)
-#pacman::p_load(rmarkdown,glue,dplyr,forcats,purrr,ggplot2,grid,
+#pacman::p_load(rmarkdown,glue,dplyr,forcats,purrr,ggplot2,grid,ggtext,
 #              tidyr,ggbump,ggiraph,stringr,ggpath,ragg,scales)
 
 library(rmarkdown)
@@ -18,6 +18,7 @@ library(ggpath)
 library(ragg)
 library(scales)
 library(grid)
+library(ggtext)
 
 ## Carrega a função com a versão interativa de ggpath::geom_from_path
 source("R/girafa/interactive_images.R")
