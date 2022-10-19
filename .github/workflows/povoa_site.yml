@@ -14,22 +14,12 @@ jobs:
       GITHUB_PAT: ${{ secrets.PAT_GITHUB }}
     steps:
       - uses: r-lib/actions/setup-r@v2
-      - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-pandoc@v2
-      
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14.x
+      - uses: actions/checkout@v2
 
       - name: Instala pacotes
         run: |   
-          install.packages(c("pacman","rmarkdown","purrr","dplyr","glue","forcats","grid","ggplot2","tidyr","ggbump","ggiraph","stringr","ggpath","ragg","scales","import","ggtext","systemfonts"))
-        shell: Rscript {0}
-        
-      - name: Instala fonte
-        run: |   
-          systemfonts::register_font("Daggersquare","cidades_docs/DAGGERSQUARE.otf") 
+          install.packages(c("rmarkdown","purrr","dplyr","glue","forcats","grid","ggplot2","tidyr","ggbump","ggiraph","stringr","ggpath","ragg","scales","import","ggtext","systemfonts"))
         shell: Rscript {0}
 
       - name: Roda o script de gatilho do gerador
@@ -42,5 +32,5 @@ jobs:
           git config user.name "Automated"
           git config user.email "actions@users.noreply.github.com"
           git add cidades_docs/*
-          git commit -m "Latest data: `date +'%Y-%m-%d %H:%M:%S'`" || exit 0
+          git commit -m "Latest run: `date +'%Y-%m-%d %H:%M:%S'`" || exit 0
           git push
