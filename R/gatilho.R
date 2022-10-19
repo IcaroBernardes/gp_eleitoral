@@ -1,18 +1,22 @@
 # 0. Carrega bibliotecas e dados
-library(rmarkdown)
-library(glue)
-library(dplyr)
-library(forcats)
+library(pacman)
+pacman::p_load(rmarkdown,glue,dplyr,forcats,purrr,ggplot2,grid,
+              tidyr,ggbump,ggiraph,stringr,ggpath,ragg,scales)
 
-library(purrr)
-library(ggplot2)
-library(tidyr)
-library(ggbump)
-library(ggiraph)
-library(stringr)
-library(ggpath)
-library(ragg)
-library(scales)
+#library(rmarkdown)
+#library(glue)
+#library(dplyr)
+#library(forcats)
+
+#library(purrr)
+#library(ggplot2)
+#library(tidyr)
+#library(ggbump)
+#library(ggiraph)
+#library(stringr)
+#library(ggpath)
+#library(ragg)
+#library(scales)
 
 ## Carrega a função com a versão interativa de ggpath::geom_from_path
 source("R/girafa/interactive_images.R")
