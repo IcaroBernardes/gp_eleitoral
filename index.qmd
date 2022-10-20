@@ -129,7 +129,7 @@ pop <- pop %>%
 
 # Mantém apenas as cidades filtradas
 ibge <- ibge %>% 
-  dplyr::filter(ibge7 %in% pop$ibge7
+  dplyr::filter(ibge7 %in% pop$ibge7)
 
 # Troca o símbolo do apóstrofo
 ibge <- ibge %>% 
