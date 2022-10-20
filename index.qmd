@@ -117,6 +117,20 @@ top: 67px;
 # Carrega os nomes e códigos IBGE dos municípios
 ibge <- readRDS("data/ibge.RDS")
 
+# Carrega dados de população estimada
+pop <- readRDS("data/pop.RDS")
+
+# Obtém as top 10 cidades por população em cada estado
+pop <- pop %>% 
+  dplyr::group_by(sigla_uf) %>% 
+  dplyr::slice_max(order_by = populacao, n = 10) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(ibge7 = id_municipio, sigla_uf, populacao)
+
+# Mantém apenas as cidades filtradas
+ibge <- ibge %>% 
+  dplyr::filter(ibge7 %in% pop$ibge7
+
 # Troca o símbolo do apóstrofo
 ibge <- ibge %>% 
   dplyr::mutate(nome = str_replace_all(nome, "'", "`"))
