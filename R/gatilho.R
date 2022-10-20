@@ -28,8 +28,11 @@ votacao <- readRDS("data/votacao.RDS")
 candidaturas <- readRDS("data/candidaturas.RDS")
 
 # 1. Une, filtra e condensa os dados
-## Seleciona e renomeia dados
-pop <- pop %>%
+## Obtém as top 10 cidades por população em cada estado
+pop <- pop %>% 
+  dplyr::group_by(sigla_uf) %>% 
+  dplyr::slice_max(order_by = populacao, n = 10) %>% 
+  dplyr::ungroup() %>% 
   dplyr::select(ibge7 = id_municipio, sigla_uf, populacao)
 
 ## Mantém apenas as cidades com os códigos IBGE correntes
